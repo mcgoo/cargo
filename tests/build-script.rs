@@ -1180,7 +1180,7 @@ fn build_script_with_dynamic_native_dependency() {
 
             fn main() {
                 let src = PathBuf::from(env::var("SRC").unwrap());
-                println!("cargo:rustc-link-search={}/target/debug/deps",
+                println!("cargo:rustc-link-search=native={}/target/debug/deps",
                          src.display());
             }
         "#)
