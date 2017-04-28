@@ -501,8 +501,24 @@ fn add_plugin_deps(rustc: &mut ProcessBuilder,
         let output = build_state.get(&key).chain_error(|| {
             internal(format!("couldn't find libs for plugin dep {}", id))
         })?;
-        for path in output.library_paths.iter() {
-            search_path.push(path.clone());
+        for dir in output.library_paths.iter() {
+            // Add -L arguments, after stripping off prefixes like "native="
+            // or "framework=".
+            let dir = match dir.to_str() {
+                Some(s) => {
+                    let mut parts = s.splitn(2, '=');
+                    match (parts.next(), parts.next()) {
+                        (Some("native"), Some(path)) |
+                        (Some("crate"), Some(path)) |
+                        (Some("dependency"), Some(path)) |
+                        (Some("framework"), Some(path)) |
+                        (Some("all"), Some(path)) => path.into(),
+                        _ => dir.clone(),
+                    }
+                }
+                None => dir.clone(),
+            };
+            search_path.push(dir);
         }
     }
     let search_path = join_paths(&search_path, var)?;
