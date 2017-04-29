@@ -504,7 +504,6 @@ fn add_plugin_deps(rustc: &mut ProcessBuilder,
         let key = (id.clone(), Kind::Host);
         let output = build_state.get(&key)
             .chain_error(|| internal(format!("couldn't find libs for plugin dep {}", id)))?;
-info!("--------------++++++++++++++++++++++++++++++ root_output={}", root_output.display());
         search_path.append(&mut filter_dynamic_search_path(output.library_paths.iter(),
                                                            root_output));
     }
@@ -539,7 +538,8 @@ fn filter_dynamic_search_path<'a, I>(paths :I, root_output: &PathBuf) -> Vec<Pat
         if dir.starts_with(&root_output) {
             search_path.push(dir);
         } else {
-            debug!("dropping path {} because it is outside {}", dir.display(), root_output.display());
+            debug!("Not including path {} in runtime library search path because it is \
+                    outside target root {}", dir.display(), root_output.display());
         }
     }
     search_path
