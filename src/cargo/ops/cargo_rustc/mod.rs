@@ -517,7 +517,7 @@ fn add_plugin_deps(rustc: &mut ProcessBuilder,
 // Strip off prefixes like "native=" or "framework=" and filter out directories
 // *not* inside our output directory since they are likely spurious and can cause
 // clashes with system shared libraries (issue #3366).
-fn filter_dynamic_search_path<'a, I>(paths :I, root_output: &PathBuf) -> Vec<PathBuf> 
+fn filter_dynamic_search_path<'a, I>(paths :I, root_output: &PathBuf) -> Vec<PathBuf>
         where I: Iterator<Item=&'a PathBuf> {
     let mut search_path = vec![];
     for dir in paths {
