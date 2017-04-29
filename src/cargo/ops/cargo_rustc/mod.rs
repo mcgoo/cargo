@@ -296,7 +296,7 @@ fn rustc(cx: &mut Context, unit: &Unit, exec: Arc<Executor>) -> CargoResult<Work
     exec.init(cx);
     let exec = exec.clone();
 
-    let root_output = cx.layout(Kind::Target).dest().to_path_buf();
+    let root_output = cx.layout(Kind::Host).dest().to_path_buf();
 
     return Ok(Work::new(move |state| {
         // Only at runtime have we discovered what the extra -L and -l
