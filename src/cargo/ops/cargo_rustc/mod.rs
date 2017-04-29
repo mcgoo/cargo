@@ -308,7 +308,7 @@ fn rustc(cx: &mut Context, unit: &Unit, exec: Arc<Executor>) -> CargoResult<Work
             let build_state = build_state.outputs.lock().unwrap();
             add_native_deps(&mut rustc, &build_state, &build_deps,
                                  pass_l_flag, &current_id)?;
-            add_plugin_deps(&mut rustc, &build_state, &build_deps, 
+            add_plugin_deps(&mut rustc, &build_state, &build_deps,
                                  &root_output)?;
         }
 
