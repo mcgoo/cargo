@@ -181,7 +181,7 @@ fn build_work<'a, 'cfg>(cx: &mut Context<'a, 'cfg>, unit: &Unit<'a>)
     fs::create_dir_all(&script_output)?;
     fs::create_dir_all(&build_output)?;
     
-    let root_output = cx.layout(Kind::Host).dest().to_path_buf();
+    let root_output = cx.target_root().to_path_buf();
 
     // Prepare the unit of "dirty work" which will actually run the custom build
     // command.
