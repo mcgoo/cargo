@@ -502,8 +502,9 @@ fn add_plugin_deps(rustc: &mut ProcessBuilder,
     let mut search_path = env::split_paths(&search_path).collect::<Vec<_>>();
     for id in build_scripts.plugins.iter() {
         let key = (id.clone(), Kind::Host);
-        let output = build_state.get(&key)
-            .chain_error(|| internal(format!("couldn't find libs for plugin dep {}", id)))?;
+        let output = build_state.get(&key).chain_error(|| {
+            internal(format!("couldn't find libs for plugin dep {}", id))
+        })?;
         search_path.append(&mut filter_dynamic_search_path(output.library_paths.iter(),
                                                            root_output));
     }
