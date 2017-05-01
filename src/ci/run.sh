@@ -42,10 +42,10 @@ fi
 #
 # This means that here if we're on CI, then we skip tests if it's not the right
 # branch or if we're not configured to run a test on PRs
-if [ -n "$CI" ] && [ "$BRANCH" != "auto-cargo" ] && [ "$ALLOW_PR" = "" ]; then
-    echo no build necessary, skipping
-    exit 0
-fi
+# if [ -n "$CI" ] && [ "$BRANCH" != "auto-cargo" ] && [ "$ALLOW_PR" = "" ]; then
+#     echo no build necessary, skipping
+#     exit 0
+# fi
 
 # For some unknown reason libz is not found in the android docker image, so we
 # use this workaround
@@ -53,17 +53,19 @@ if [ "$TARGET" = armv7-linux-androideabi ]; then
     export DEP_Z_ROOT=/android-ndk/arm/sysroot/usr
 fi
 
-$SRC/configure \
-    --prefix=/tmp/obj/install \
-    --target=$TARGET \
-    --release-channel=$CHANNEL \
-    --enable-build-openssl
+cargo build --release
+cargo test --test plugins
+# $SRC/configure \
+#     --prefix=/tmp/obj/install \
+#     --target=$TARGET \
+#     --release-channel=$CHANNEL \
+#     --enable-build-openssl
 
-make cargo-$TARGET
-make dist-$TARGET
+# make cargo-$TARGET
+# make dist-$TARGET
 
-if [ ! -z "$MAKE_TARGETS" ]; then
-  for target in "$MAKE_TARGETS"; do
-    make $target
-  done
-fi
+# if [ ! -z "$MAKE_TARGETS" ]; then
+#   for target in "$MAKE_TARGETS"; do
+#     make $target
+#   done
+# fi
