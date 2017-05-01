@@ -296,7 +296,7 @@ fn rustc(cx: &mut Context, unit: &Unit, exec: Arc<Executor>) -> CargoResult<Work
     exec.init(cx);
     let exec = exec.clone();
 
-    let root_output = cx.layout(Kind::Target).dest().to_path_buf();
+    let root_output = cx.target_root().to_path_buf();
 
     return Ok(Work::new(move |state| {
         // Only at runtime have we discovered what the extra -L and -l
@@ -308,7 +308,7 @@ fn rustc(cx: &mut Context, unit: &Unit, exec: Arc<Executor>) -> CargoResult<Work
             let build_state = build_state.outputs.lock().unwrap();
             add_native_deps(&mut rustc, &build_state, &build_deps,
                                  pass_l_flag, &current_id)?;
-            add_plugin_deps(&mut rustc, &build_state, &build_deps, 
+            add_plugin_deps(&mut rustc, &build_state, &build_deps,
                                  &root_output)?;
         }
 
@@ -502,9 +502,9 @@ fn add_plugin_deps(rustc: &mut ProcessBuilder,
     let mut search_path = env::split_paths(&search_path).collect::<Vec<_>>();
     for id in build_scripts.plugins.iter() {
         let key = (id.clone(), Kind::Host);
-        let output = build_state.get(&key)
-            .chain_error(|| internal(format!("couldn't find libs for plugin dep {}", id)))?;
-info!("--------------++++++++++++++++++++++++++++++ root_output={}", root_output.display());
+        let output = build_state.get(&key).chain_error(|| {
+            internal(format!("couldn't find libs for plugin dep {}", id))
+        })?;
         search_path.append(&mut filter_dynamic_search_path(output.library_paths.iter(),
                                                            root_output));
     }
@@ -518,7 +518,7 @@ info!("--------------++++++++++++++++++++++++++++++ root_output={}", root_output
 // Strip off prefixes like "native=" or "framework=" and filter out directories
 // *not* inside our output directory since they are likely spurious and can cause
 // clashes with system shared libraries (issue #3366).
-fn filter_dynamic_search_path<'a, I>(paths :I, root_output: &PathBuf) -> Vec<PathBuf> 
+fn filter_dynamic_search_path<'a, I>(paths :I, root_output: &PathBuf) -> Vec<PathBuf>
         where I: Iterator<Item=&'a PathBuf> {
     let mut search_path = vec![];
     for dir in paths {
@@ -539,7 +539,8 @@ fn filter_dynamic_search_path<'a, I>(paths :I, root_output: &PathBuf) -> Vec<Pat
         if dir.starts_with(&root_output) {
             search_path.push(dir);
         } else {
-            debug!("dropping path {} because it is outside {}", dir.display(), root_output.display());
+            debug!("Not including path {} in runtime library search path because it is \
+                    outside target root {}", dir.display(), root_output.display());
         }
     }
     search_path

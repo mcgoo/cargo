@@ -288,7 +288,7 @@ impl<'a, 'cfg> Context<'a, 'cfg> {
     }
 
     /// Returns the appropriate directory layout for either a plugin or not.
-    pub fn layout(&self, kind: Kind) -> &Layout {
+    fn layout(&self, kind: Kind) -> &Layout {
         match kind {
             Kind::Host => &self.host,
             Kind::Target => self.target.as_ref().unwrap_or(&self.host)
@@ -326,6 +326,11 @@ impl<'a, 'cfg> Context<'a, 'cfg> {
 
     pub fn host_deps(&self) -> &Path {
         self.host.deps()
+    }
+
+    /// Return the root of the build output tree
+    pub fn target_root(&self) -> &Path {
+        self.host.dest()
     }
 
     /// Returns the appropriate output directory for the specified package and
