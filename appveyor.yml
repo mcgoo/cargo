@@ -56,16 +56,16 @@ before_deploy:
           Push-AppveyorArtifact $_.FullName -FileName ${env:APPVEYOR_REPO_COMMIT}/$_
         }
 
-deploy:
-  - provider: S3
-    skip_cleanup: true
-    access_key_id: AKIAIWZDM2B2IJOWBGTA
-    secret_access_key:
-      secure: hyH54di5NyNdV+jjntM1dRN/NeUgDidwZmwcg4/UKpdJqGf1AAwYb2ulXYK67CXA
-    bucket: rust-lang-ci
-    set_public: true
-    region: us-east-1
-    folder: cargo-builds
-    artifact: /.*\.(tar.gz|sha256)/
-    on:
-      branch: auto-cargo
+# deploy:
+#   - provider: S3
+#     skip_cleanup: true
+#     access_key_id: AKIAIWZDM2B2IJOWBGTA
+#     secret_access_key:
+#       secure: hyH54di5NyNdV+jjntM1dRN/NeUgDidwZmwcg4/UKpdJqGf1AAwYb2ulXYK67CXA
+#     bucket: rust-lang-ci
+#     set_public: true
+#     region: us-east-1
+#     folder: cargo-builds
+#     artifact: /.*\.(tar.gz|sha256)/
+#     on:
+#       branch: auto-cargo
