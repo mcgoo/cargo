@@ -42,10 +42,10 @@ fi
 #
 # This means that here if we're on CI, then we skip tests if it's not the right
 # branch or if we're not configured to run a test on PRs
-if [ -n "$CI" ] && [ "$BRANCH" != "auto-cargo" ] && [ "$ALLOW_PR" = "" ]; then
-    echo no build necessary, skipping
-    exit 0
-fi
+# if [ -n "$CI" ] && [ "$BRANCH" != "auto-cargo" ] && [ "$ALLOW_PR" = "" ]; then
+#     echo no build necessary, skipping
+#     exit 0
+# fi
 
 # For some unknown reason libz is not found in the android docker image, so we
 # use this workaround
