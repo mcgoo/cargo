@@ -1,0 +1,10 @@
+
+            [package]
+            name = "bar"
+            version = "0.0.1"
+            authors = []
+
+            [lib]
+            name = "bar"
+            crate_type = ["dylib"]
+        
