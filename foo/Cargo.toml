@@ -1,0 +1,13 @@
+
+            [package]
+            name = "foo"
+            version = "0.0.1"
+            authors = []
+
+            [lib]
+            name = "foo"
+            crate_type = ["dylib"]
+
+            [dependencies.bar]
+            path = "bar"
+        
